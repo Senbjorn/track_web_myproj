@@ -1,1 +1,10 @@
 {% extends "base.html" %}
+{% block  content %}
+    <div class="commdiv">Users:
+    <ol class="commls">
+    {% for user in Users %}
+        <li>{{ user }} #id{{ user.id }}</li>
+    {% endfor %}
+    </ol>
+    </div>
+{% endblock %}
