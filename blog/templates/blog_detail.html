@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content%}
+    <div class="commdiv">
+        Title: {{ idblog.name }} <br>
+        Created at: <span class="ctime">{{ idblog.created_at }}</span> <br>
+        Last update: <span class="ctime">{{ idblog.updated_at }}</span> <br>
+        Owner: {{ idblog.owner }}
+    </div>
+    <div class="commdiv">
+        Posts:
+        <ol>
+        {% for post in idblog.posts.filter.all %}
+            <li><a href={% url "blog:post_detail" pk=post.id %}>{{ post }}</a></li>
+        {% endfor %}
+        </ol>
+    </div>
+{% endblock %}

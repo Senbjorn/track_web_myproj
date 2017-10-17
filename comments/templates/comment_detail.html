@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content%}
+    <div class="commdiv">
+        Comment: #id{{ idcom.id }} <br>
+        Created at: <span class="ctime">{{ idcom.created_at }}</span> <br>
+        Post: <a href={% url "blog:post_detail" pk=idcom.post.id %}>{{ idcom.post }}</a> <br>
+        Author: {{ idcom.author }}
+    </div>
+    <div class="textAr">
+        {{ idcom.text }}
+    </div>
+{% endblock %}

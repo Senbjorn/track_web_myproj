@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content%}
+    <div class="commdiv">
+        Title: {{ idpost.name }} <br>
+        Created at: <span class="ctime">{{ idpost.created_at }}</span> <br>
+        Last update: <span class="ctime">{{ idpost.updated_at }}</span> <br>
+        Blog: <a href={% url "blog:blog_detail" pk=idpost.blog.id %}>{{ idpost.blog }}</a> <br>
+        Author: {{ idpost.author }}
+    </div>
+    <div class="textAr">
+        {{ idpost.text }}
+    </div>
+    <div class="commdiv">
+        Comments:
+        <ol>
+        {% for comment in idpost.comment_set.all %}
+            <li><a href={% url "comments:comment_detail" pk=comment.id %}>{{ comment }}</a></li>
+        {% endfor %}
+        </ol>
+    </div>
+{% endblock %}

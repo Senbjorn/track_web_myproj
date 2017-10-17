@@ -1,6 +1,6 @@
-
+from comments.views import *
 from django.conf.urls import url
 
 urlpatterns = [
-    #у меня тут пусто, но в ходе выполнения ДЗ тут появятся роуты
+    url(r'comment/id(?P<pk>\d+)/$', CommentDetail.as_view(), name="comment_detail")
 ]

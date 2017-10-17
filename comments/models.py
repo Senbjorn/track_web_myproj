@@ -10,3 +10,6 @@ class Comment(models.Model):
     text = models.TextField(default='')
     post = models.ForeignKey(Post)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='comments')
+
+    def __str__(self):
+        return 'comment #id{0} created at {1} by {2}'.format(self.id, self.created_at, self.author)

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block  content %}
+    <div class="commdiv">Blogs:
+    <ol class="commls">
+    {% for blog in blogList %}
+        <li><a href={% url "blog:blog_detail" pk=blog.id %}>{{ blog }}</a></li>
+    {% endfor %}
+    </ol>
+    </div>
+{% endblock %}
