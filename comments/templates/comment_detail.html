@@ -3,8 +3,8 @@
     <div class="commdiv">
         Comment: #id{{ idcom.id }} <br>
         Created at: <span class="ctime">{{ idcom.created_at }}</span> <br>
-        Post: <a href={% url "blog:post_detail" pk=idcom.post.id %}>{{ idcom.post }}</a> <br>
-        Author: {{ idcom.author }}
+        Post: {% include "post_ref.html" with post=idcom.post %} <br>
+        Author: {% include "user_ref.html" with user=idcom.author %}
     </div>
     <div class="textAr">
         {{ idcom.text }}

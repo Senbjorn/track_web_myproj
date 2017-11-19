@@ -8,7 +8,7 @@
         Blogs:
     <ol class="commls">
     {% for blog in blogList %}
-        <li><a href={% url "blog:blog_detail" pk=blog.id %}>{{ blog }}</a></li>
+        <li>{% include "blog_ref.html" with blog=blog %}</li>
     {% endfor %}
     </ol>
     </div>

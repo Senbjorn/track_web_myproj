@@ -4,22 +4,26 @@ from django.shortcuts import render, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.shortcuts import get_object_or_404
 from blog.models import *
+from comments.views import CommentListForm
+from comments.models import Comment
 from django.contrib.contenttypes.fields import GenericRelation as GR
 
 # Create your views here.
 
 
 class CategoryListForm(forms.Form):
-    order_by = forms.ChoiceField(choices=(
+    order_by = forms.ChoiceField(
+        choices=(
             ('name', 'name'),
             ('id', 'id')
         ),
         required=False,
         label='sort by'
     )
-    direction = forms.ChoiceField(choices=(
-        ('+' , 'increase'),
-        ('-' , 'decrease')
+    direction = forms.ChoiceField(
+        choices=(
+            ('+' , 'increase'),
+            ('-' , 'decrease')
         ),
         required=False,
         label='order'
@@ -28,45 +32,71 @@ class CategoryListForm(forms.Form):
 
 
 class BlogListForm(forms.Form):
-    order_by = forms.ChoiceField(choices=(
-        ('name', 'name'),
-        ('id', 'id'),
-        ('created_at', 'date of creation')
+    order_by = forms.ChoiceField(
+        choices=(
+            ('name', 'name'),
+            ('id', 'id'),
+            ('created_at', 'date')
         ),
         required=False,
         label='sort by'
     )
-    direction = forms.ChoiceField(choices=(
-        ('+', 'increase'),
-        ('-', 'decrease')
+    direction = forms.ChoiceField(
+        choices=(
+            ('+', 'increase'),
+            ('-', 'decrease')
+        ),
+        required=False,
+        label='order'
+    )
+    search = forms.CharField(required=False)
+
+
+class PostListFrom(forms.Form):
+    order_py = forms.ChoiceField(
+        choices=(
+            ('name', 'name'),
+            ('id', 'id'),
+            ('created_at', 'date')
+        ),
+        required=False,
+        label='sort by'
+    )
+    direction = forms.ChoiceField(
+        choices=(
+            ('+', 'increase'),
+            ('-', 'decrease')
+        ),
+        required=False,
+        label='order'
+    )
+    search = forms.CharField(required=False)
+
+
+class PostListForm(forms.Form):
+    order_by = forms.ChoiceField(
+        choices=(
+            ('name', 'name'),
+            ('id', 'id'),
+            ('created_at', 'date of creation')
+        ),
+        required=False,
+        label='sort by'
+    )
+    direction = forms.ChoiceField(
+        choices=(
+            ('+', 'increase'),
+            ('-', 'decrease')
         ),
         required=False,
         label='order'
     )
     search = forms.CharField(required=False);
 
-class PostListForm(forms.Form):
-    order_by = forms.ChoiceField(choices=(
-        ('name', 'name'),
-        ('id', 'id'),
-        ('created_at', 'date of creation')
-    ),
-        required=False,
-        label='sort by'
-    )
-    direction = forms.ChoiceField(choices=(
-        ('+', 'increase'),
-        ('-', 'decrease')
-    ),
-        required=False,
-        label='order'
-    )
-    search = forms.CharField(required=False);
 
 class BlogList(ListView):
     template_name = "blog_list.html"
     context_object_name = "blogList"
-    # queryset = Blog.objects.all()
     model = Blog
     my_form = None
 
@@ -105,14 +135,30 @@ class BlogDetail(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         self.my_blog = get_object_or_404(Blog.objects.all(), id=kwargs['pk'])
-        self.my_form = BlogListForm(self.request.GET)
+        self.my_form = PostListForm(self.request.GET)
         return super(BlogDetail, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(BlogDetail, self).get_context_data(**kwargs)
         context['title'] = "Blog details"
         context['idblog'] = self.my_blog
+        context['form'] = self.my_form
         return context
+
+    def get_queryset(self):
+        query = super(BlogDetail, self).get_queryset()
+        if self.my_form.is_valid():
+            if self.my_form.cleaned_data['order_by']:
+                if self.my_form.cleaned_data['direction']:
+                    if self.my_form.cleaned_data['direction'] == '+':
+                        query = query.order_by(self.my_form.cleaned_data['order_by'])
+                    elif self.my_form.cleaned_data['direction'] == '-':
+                        query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
+                else:
+                    query = query.order_by(self.my_form.cleaned_data['order_by'])
+            if self.my_form.cleaned_data['search']:
+                query = query.filter(name=self.my_form.cleaned_data['search'])
+        return query
 
 
 class PostList(ListView):
@@ -126,15 +172,39 @@ class PostList(ListView):
         return context
 
 
-class PostDetail(DetailView):
+class PostDetail(ListView):
     template_name = "post_detail.html"
-    context_object_name = "idpost"
-    model = Post
+    context_object_name = "comments"
+    model = Comment
+    my_form = None
+    my_post = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.my_form = CommentListForm(self.request.GET)
+        self.my_post = get_object_or_404(Post.objects.all(), id=kwargs['pk'])
+        return super(PostDetail, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(PostDetail, self).get_context_data(**kwargs)
         context['title'] = "Post details"
+        context['idpost'] = self.my_post
+        context['form'] = self.my_form
         return context
+
+    def get_queryset(self):
+        query = super(PostDetail, self).get_queryset()
+        if self.my_form.is_valid():
+            if self.my_form.cleaned_data['order_by']:
+                if self.my_form.cleaned_data['direction']:
+                    if self.my_form.cleaned_data['direction'] == '+':
+                        query = query.order_by(self.my_form.cleaned_data['order_by'])
+                    elif self.my_form.cleaned_data['direction'] == '-':
+                        query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
+                else:
+                    query = query.order_by(self.my_form.cleaned_data['order_by'])
+            if self.my_form.cleaned_data['search']:
+                query = query.filter(author__username=self.my_form.cleaned_data['search'])
+        return query
 
 
 class PostLikeList(DetailView):

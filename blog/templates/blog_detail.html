@@ -5,6 +5,9 @@
         Created at: <span class="ctime">{{ idblog.created_at }}</span> <br>
         Last update: <span class="ctime">{{ idblog.updated_at }}</span> <br>
         Owner: {% include "user_ref.html" with user=idblog.owner %}
+        <div class="textAr">
+            {{ idblog.description }}
+        </div>
     </div>
     <div class="commdiv">
         Categories:
@@ -16,6 +19,7 @@
         <div style="text-align: center">
             {% include "create_post_ref.html" with blogid=idblog.id %}
         </div>
+        {% include "search_form.html" with form=form %}
         Posts:
         <ol>
         {% for post in posts %}
