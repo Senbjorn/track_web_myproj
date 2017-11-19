@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 from blog.models import *
 from comments.models import *
 from core.models import *
+from django.core.exceptions import PermissionDenied
 # Create your views here.
 
 
@@ -44,8 +45,9 @@ class ProfileMainDetail(DetailView):
         context['you'] = self.request.user
         return context
 
-    def get_object(self):
-        obj = super(ProfileMainDetail, self).get_object()
-        if (obj.id != self.request.user.id):
-            raise PermissionError
-        return obj
+    # def get_object(self):
+    #     obj = super(ProfileMainDetail, self).get_object()
+    #     if (obj.id != self.request.user.id):
+    #         raise PermissionDenied
+    #     return obj
+

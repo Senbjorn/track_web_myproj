@@ -4,13 +4,22 @@
         Title: {{ idblog.name }} <br>
         Created at: <span class="ctime">{{ idblog.created_at }}</span> <br>
         Last update: <span class="ctime">{{ idblog.updated_at }}</span> <br>
-        Owner: {{ idblog.owner }}
+        Owner: {% include "user_ref.html" with user=idblog.owner %}
     </div>
     <div class="commdiv">
+        Categories:
+        {% for cat in idblog.categories.all %}
+            {{ cat.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor%}
+    </div>
+    <div class="commdiv">
+        <div style="text-align: center">
+            {% include "create_post_ref.html" with blogid=idblog.id %}
+        </div>
         Posts:
         <ol>
-        {% for post in idblog.posts.filter.all %}
-            <li><a href={% url "blog:post_detail" pk=post.id %}>{{ post }}</a></li>
+        {% for post in posts %}
+            <li>{% include "post_with_comment.html" with post=post %}</li>
         {% endfor %}
         </ol>
     </div>

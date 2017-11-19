@@ -1,0 +1,8 @@
+<div class="commdiv">
+        Comment: #id{{ comment.id }} <br>
+        Created at: <span class="ctime">{{ comment.created_at }}</span><br>
+        Author: {% include "user_ref.html" with user=comment.author %}
+</div>
+<div class="textAr">
+        {{ comment.text }}
+</div>

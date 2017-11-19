@@ -3,7 +3,7 @@
     <div class="commdiv">Users:
     <ol class="commls">
     {% for user in Users %}
-        <li>{{ user }} #id{{ user.id }}</li>
+        <li><a href={% url "core:profile_main_page" pk=user.id %}>{{ user }} #id{{ user.id }}</a></li>
     {% endfor %}
     </ol>
     </div>

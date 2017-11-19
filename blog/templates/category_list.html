@@ -2,13 +2,13 @@
 {% block  content %}
     <div class="commdiv">
     <div style="text-align: center">
-        {% include "create_blog_ref.html" %}
-    </div>
+        Create new category
         {% include "search_form.html" with form=form %}
-        Blogs:
+    </div>
+        Categories:
     <ol class="commls">
-    {% for blog in blogList %}
-        <li><a href={% url "blog:blog_detail" pk=blog.id %}>{{ blog }}</a></li>
+    {% for cat in categoryList %}
+        <li>{% include "category.html" with category=cat %}</li>
     {% endfor %}
     </ol>
     </div>

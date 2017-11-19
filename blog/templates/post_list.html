@@ -3,7 +3,7 @@
     <div class="commdiv">Posts:
     <ol class="commls">
     {% for post in postList %}
-        <li><a href={% url "blog:post_detail" pk=post.id %}>{{ post }}</a></li>
+        <li>{% include "post_with_comment.html" with post=post %}</li>
     {% endfor %}
     </ol>
     </div>

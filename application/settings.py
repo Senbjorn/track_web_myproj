@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'blog.apps.BlogConfig',
     'comments.apps.CommentsConfig',
+    'like.apps.LikeConfig',
 ]
 
 AUTH_USER_MODEL = 'core.User'

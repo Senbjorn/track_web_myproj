@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-    {% block style %}
         <style>
-        footer {
+            {% block style %}
+                footer {
             padding: 1em;
             color:gray;
             background-color: aliceblue;
@@ -50,17 +50,18 @@
         span.ctime {
             color: deeppink;
         }
-        {% block intoStyle %}
-        {% endblock %}
+            {% endblock %}
         </style>
-    {% endblock %}
 </head>
 {% endblock %}
 <body>
     {% block header %}
         <header>
         <div class="headline">
-            <h2><a style="color: green; text-decoration: none;" href={% url "core:startpage" %}>Blog for django developers</a></h2>
+            <h2><a style="color: green; text-decoration: none;" href={% url "core:startpage" %}>Blog for django developers</a></h2><br>
+            <a href={% url "blog:blog_list" %}>Blogs</a> <a href={% url "core:profiles" %}> Users</a>
+            <a href={% url "blog:category_list" %}>Categories</a>
+            <a href={% url "core:profiles" %}>To profiles</a>
         </div>
         </header>
     {% endblock %}
