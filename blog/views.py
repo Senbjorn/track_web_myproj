@@ -207,18 +207,6 @@ class PostDetail(ListView):
         return query
 
 
-class PostLikeList(DetailView):
-    model = Post
-    template_name = "post_like_list.html"
-    context_object_name = "post"
-
-    def get_context_data(self, **kwargs):
-        context = super(PostLikeList, self).get_context_data(**kwargs)
-        context['title'] = "Like list"
-# def blog_list(request):
-#     return render(request, "blog_list.html", {'title': 'Blog list'})
-
-
 class CreateBlog(CreateView):
     template_name = "blog_create.html"
     model = Blog

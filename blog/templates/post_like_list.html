@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-    <ol class="commls">
-    {% for like in post.likes.all %}
-        <li><a href={% url "like: %}></a></li>
-    {% endfor %}
-    </ol>
-{% endblock %}
