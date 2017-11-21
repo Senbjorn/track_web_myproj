@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="commdiv">
-        User: {{ user }} <br>
+        Username: {{ user }} <br>
         First name: {{ user.first_name|default:"undefined" }} <br>
         Last name: {{ user.last_name|default:"undefined" }} <br>
         Joined at: {{ user.date_joined }}

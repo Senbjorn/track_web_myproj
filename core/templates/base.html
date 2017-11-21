@@ -73,7 +73,9 @@
             <ol class="commls">
                 {% for post in Posts.all %}
                     <li style="padding: 3pt">Post <a href={% url "blog:post_detail" pk=post.id %}>{{ post.name }}</a>
-                        created at <span class="ctime">{{ post.created_at }}</span> by {{ post.author }}</li>
+                        created at <span class="ctime">{{ post.created_at }}</span>
+                        by {% include "user_ref.html" with user=post.author %}
+                        in {% include "blog_ref.html" with blog=post.blog %}</li>
                 {% endfor %}
             </ol>
         </div>
@@ -82,7 +84,7 @@
             <ol class="commls">
                 {% for blog in Blogs.all %}
                     <li style="padding: 3pt">Blog <a href={% url "blog:blog_detail" pk=blog.id %}>{{ blog.name }}</a>
-                        created at <span class="ctime">{{ blog.created_at }}</span> by {{ blog.owner }}</li>
+                        created at <span class="ctime">{{ blog.created_at }}</span> by {% include "user_ref.html" with user=blog.owner %}</li>
                 {% endfor %}
             </ol>
         </div>

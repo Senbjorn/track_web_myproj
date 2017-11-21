@@ -20,6 +20,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^blogs/', include('blog.urls', namespace='blog')),
     url(r'^comments/', include('comments.urls', namespace='comments')),
-    url(r'^main/', include('core.urls', namespace='core')),
-    url(r'^like/', include('like.urls', namespace='like'))
+    url(r'^core/', include('core.urls', namespace='core')),
+    url(r'^likes/', include('like.urls', namespace='like'))
 ]

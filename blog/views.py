@@ -22,8 +22,8 @@ class CategoryListForm(forms.Form):
     )
     direction = forms.ChoiceField(
         choices=(
-            ('+' , 'increase'),
-            ('-' , 'decrease')
+            ('inc', 'increase'),
+            ('dec', 'decrease')
         ),
         required=False,
         label='order'
@@ -43,8 +43,8 @@ class BlogListForm(forms.Form):
     )
     direction = forms.ChoiceField(
         choices=(
-            ('+', 'increase'),
-            ('-', 'decrease')
+            ('inc', 'increase'),
+            ('dec', 'decrease')
         ),
         required=False,
         label='order'
@@ -64,8 +64,8 @@ class PostListFrom(forms.Form):
     )
     direction = forms.ChoiceField(
         choices=(
-            ('+', 'increase'),
-            ('-', 'decrease')
+            ('inc', 'increase'),
+            ('dec', 'decrease')
         ),
         required=False,
         label='order'
@@ -85,8 +85,8 @@ class PostListForm(forms.Form):
     )
     direction = forms.ChoiceField(
         choices=(
-            ('+', 'increase'),
-            ('-', 'decrease')
+            ('inc', 'increase'),
+            ('dec', 'decrease')
         ),
         required=False,
         label='order'
@@ -115,9 +115,9 @@ class BlogList(ListView):
         if self.my_form.is_valid():
             if self.my_form.cleaned_data['order_by']:
                 if self.my_form.cleaned_data['direction']:
-                    if self.my_form.cleaned_data['direction'] == '+':
+                    if self.my_form.cleaned_data['direction'] == 'inc':
                         query = query.order_by(self.my_form.cleaned_data['order_by'])
-                    elif self.my_form.cleaned_data['direction'] == '-':
+                    elif self.my_form.cleaned_data['direction'] == 'dec':
                         query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
                 else:
                     query = query.order_by(self.my_form.cleaned_data['order_by'])
@@ -147,12 +147,13 @@ class BlogDetail(ListView):
 
     def get_queryset(self):
         query = super(BlogDetail, self).get_queryset()
+        query = query.filter(blog=self.my_blog)
         if self.my_form.is_valid():
             if self.my_form.cleaned_data['order_by']:
                 if self.my_form.cleaned_data['direction']:
-                    if self.my_form.cleaned_data['direction'] == '+':
+                    if self.my_form.cleaned_data['direction'] == 'inc':
                         query = query.order_by(self.my_form.cleaned_data['order_by'])
-                    elif self.my_form.cleaned_data['direction'] == '-':
+                    elif self.my_form.cleaned_data['direction'] == 'dec':
                         query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
                 else:
                     query = query.order_by(self.my_form.cleaned_data['order_by'])
@@ -193,12 +194,13 @@ class PostDetail(ListView):
 
     def get_queryset(self):
         query = super(PostDetail, self).get_queryset()
+        query = query.filter(post=self.my_post)
         if self.my_form.is_valid():
             if self.my_form.cleaned_data['order_by']:
                 if self.my_form.cleaned_data['direction']:
-                    if self.my_form.cleaned_data['direction'] == '+':
+                    if self.my_form.cleaned_data['direction'] == 'inc':
                         query = query.order_by(self.my_form.cleaned_data['order_by'])
-                    elif self.my_form.cleaned_data['direction'] == '-':
+                    elif self.my_form.cleaned_data['direction'] == 'dec':
                         query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
                 else:
                     query = query.order_by(self.my_form.cleaned_data['order_by'])
@@ -264,9 +266,9 @@ class CategoryList(ListView):
         if self.my_form.is_valid():
             if self.my_form.cleaned_data['order_by']:
                 if self.my_form.cleaned_data['direction']:
-                    if self.my_form.cleaned_data['direction'] == '+':
+                    if self.my_form.cleaned_data['direction'] == 'inc':
                         query = query.order_by(self.my_form.cleaned_data['order_by'])
-                    elif self.my_form.cleaned_data['direction'] == '-':
+                    elif self.my_form.cleaned_data['direction'] == 'dec':
                         query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
                 else:
                     query = query.order_by(self.my_form.cleaned_data['order_by'])
