@@ -1,14 +1,14 @@
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django import forms
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, redirect
+from django.urls import reverse as reverse_url
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.shortcuts import get_object_or_404
 from blog.models import *
 from comments.views import CommentListForm
 from comments.models import Comment
 from django.contrib.contenttypes.fields import GenericRelation as GR
-
-# Create your views here.
 
 
 class CategoryListForm(forms.Form):
@@ -226,14 +226,36 @@ class UpdateBlog(UpdateView):
     pass
 
 
-class CreatePost(CreateView):
+class UpdatePost(UserPassesTestMixin, UpdateView):
+    template_name = "post_update.html"
+    model = Post
+    fields = 'text',
+    context_object_name = "post"
+
+    raise_exception = True
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', kwargs={'pk': self.object.pk})
+
+
+class CreatePost(UserPassesTestMixin, CreateView):
     template_name = "post_create.html"
     model = Post
     fields = 'text', 'name'
     my_blog = None
 
+    raise_exception = True
+
+    def test_func(self):
+        return self.my_blog.owner == self.request.user
+
     def dispatch(self, request, *args, **kwargs):
-        self.my_blog = get_object_or_404(Blog.objects.all(), id=kwargs['pk'])
+        self.my_blog = get_object_or_404(Blog.objects.all(), id=self.kwargs['pk'])
+        # if self.my_blog.owner != self.request.user:
+        #     return redirect(reverse_url("blog:post_creation_denied", kwargs={'pk': self.my_blog.id}))
         return super(CreatePost, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):

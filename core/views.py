@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.shortcuts import reverse
+from django.contrib.auth import authenticate, login
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
 from blog.models import *
 from comments.models import *
 from core.models import *
@@ -36,7 +40,7 @@ class ProfileList(ListView):
 
 class ProfileMainDetail(DetailView):
     template_name = "profile_main_page.html"
-    context_object_name = "user"
+    context_object_name = "cuser"
     model = User
 
     def get_context_data(self, **kwargs):
@@ -51,3 +55,21 @@ class ProfileMainDetail(DetailView):
     #         raise PermissionDenied
     #     return obj
 
+
+class ProfileCreationForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
+    last_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+
+
+class ProfileCreate(CreateView):
+    template_name = "signup.html"
+    form_class = ProfileCreationForm
+
+    def get_success_url(self):
+        login(self.request, self.object)
+        return reverse("core:startpage")
