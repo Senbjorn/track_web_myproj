@@ -4,7 +4,8 @@
         Comment: #id{{ idcom.id }} <br>
         Created at: <span class="ctime">{{ idcom.created_at }}</span> <br>
         Post: {% include "post_ref.html" with post=idcom.post %} <br>
-        Author: {% include "user_ref.html" with user=idcom.author %}
+        Author: {% include "profile_ref.html" with user=idcom.author %}<br>
+        {% include "update_comment_ref.html" with commentid=idcom.id %}
     </div>
     <div class="textAr">
         {{ idcom.text }}

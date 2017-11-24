@@ -8,7 +8,7 @@
         Blogs:
     <ol class="commls">
     {% for blog in blogList %}
-        <li>{% include "blog_ref.html" with blog=blog %}</li>
+        <li>{% include "blog_ref.html" with blog=blog %} {% include "update_blog_ref.html" with blogid=blog.id %}</li>
     {% endfor %}
     </ol>
     </div>

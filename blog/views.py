@@ -222,8 +222,19 @@ class CreateBlog(CreateView):
         return reverse('blog:blog_detail', kwargs={'pk': self.object.pk})
 
 
-class UpdateBlog(UpdateView):
-    pass
+class UpdateBlog(UserPassesTestMixin, UpdateView):
+    template_name = "blog_update.html"
+    model = Blog
+    fields = 'description',
+    context_object_name = 'blog'
+
+    raise_exception = True
+
+    def test_func(self):
+        return self.get_object().owner == self.request.user
+
+    def get_success_url(self):
+        return reverse('blog:blog_detail', kwargs={'pk': self.object.pk})
 
 
 class UpdatePost(UserPassesTestMixin, UpdateView):

@@ -4,7 +4,7 @@
         Title: {{ idblog.name }} <br>
         Created at: <span class="ctime">{{ idblog.created_at }}</span> <br>
         Last update: <span class="ctime">{{ idblog.updated_at }}</span> <br>
-        Owner: {% include "user_ref.html" with user=idblog.owner %}
+        Owner: {% include "profile_ref.html" with user=idblog.owner %}
         <div class="textAr">
             {{ idblog.description }}
         </div>

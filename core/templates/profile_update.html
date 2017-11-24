@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="commdiv" style="text-align: center; color: orange">
+        Settings
+    </div>
+    <div class="commdiv">
+        {% include "default_form_template.html" with form=form value="save" %}
+    </div>
+{% endblock %}

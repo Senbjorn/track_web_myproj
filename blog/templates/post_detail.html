@@ -5,13 +5,14 @@
         Created at: <span class="ctime">{{ idpost.created_at }}</span> <br>
         Last update: <span class="ctime">{{ idpost.updated_at }}</span> <br>
         Blog: {% include "blog_ref.html" with blog=idpost.blog %} <br>
-        Author: {% include "user_ref.html" with user=idpost.author %}
+        Author: {% include "profile_ref.html" with user=idpost.author %}
     </div>
     <div class="textAr">
         {{ idpost.text }}
     </div>
     <div class="commdiv">{% include "update_post_ref.html" with postid=idpost.id %}</div>
     <div class="commdiv">
+        {% include "create_comment_ref.html" with postid=idpost.id %}<br>
         {% include "search_form.html" with form=form %}
         Comments:
         <ol>

@@ -1,5 +1,5 @@
 <div>
-    <a href={% url "blog:post_detail" pk=post.id %}>{{ post }}</a> by {% include "user_ref.html" with user=post.author %}
+    <a href={% url "blog:post_detail" pk=post.id %}>{{ post }}</a> by {% include "profile_ref.html" with user=post.author %}
     {% if post.comments.count > 0 %}
         <div>
             Last comment:<br>
