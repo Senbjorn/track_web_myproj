@@ -4,6 +4,17 @@
         Username: {{ cuser }} <br>
         First name: {{ cuser.first_name|default:"undefined" }} <br>
         Last name: {{ cuser.last_name|default:"undefined" }} <br>
-        Joined at: {{ cuser.date_joined }}
+        Joined at: {{ cuser.date_joined }}<br>
+        {% include "update_profile_ref.html" with profileid=cuser.pk %}
+        <a href={% url "core:profile_update_pass" %}>Change password</a>
+    </div>
+
+    <div class="commdiv">
+        <a href={% url "core:profile_blogs" pk=cuser.pk%}>Blogs</a><br>
+        <a href={% url "core:profile_posts" pk=cuser.pk%}>Posts</a><br>
+        <a href={% url "core:profile_comments" pk=cuser.pk%}>Comments</a><br>
+        <a href={% url "core:profile_favorites" pk=cuser.pk%}>Favorites</a><br>
+
+
     </div>
 {% endblock %}

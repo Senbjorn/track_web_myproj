@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
+from django.forms import forms
 # Create your views here.
 from like.models import LikeDislike
 
+class LikeButtonForm(forms.Form):
+    # user_id = forms.
+    pass
 
 class LikeDetail(DetailView):
     model = LikeDislike

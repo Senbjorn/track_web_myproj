@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+    <div class="commdiv" style="text-align: center">
+        {% if not comments %}
+            No comments((
+        {% else %}
+            Comments:<br>
+            <ol>
+            {% for comment in comments %}
+                <li>{% include "comment_ref.html" with comment=comment %}
+                    to post {% include "post_ref.html" with post=comment.post %}
+                    in blog {% include "blog_ref.html" with blog=comment.post.blog %}</li>
+            {% endfor %}
+            </ol>
+        {% endif %}
+    </div>
+{% endblock %}

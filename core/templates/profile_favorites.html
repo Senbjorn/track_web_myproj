@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="commdiv" style="text-align: center">
+        {% if not list %}
+            No liked content((
+        {% else %}
+            Liked:<br>
+            <ol>
+            {% for item in list %}
+                <li>
+                    {% if item.content_type.model == "post" %}
+                        post {% include "post_ref.html" with post=item.content_object %}
+                        in blog {% include "blog_ref.html" with blog=item.content_object.blog %}
+                    {% elif item.content_type.model == "comment" %}
+                        {% include "comment_ref.html" with comment=item.content_object %}
+                        to post {% include "post_ref.html" with post=item.content_object.post %}
+                        in blog {% include "blog_ref.html" with blog=item.content_object.post.blog %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ol>
+        {% endif %}
+    </div>
+{% endblock %}
