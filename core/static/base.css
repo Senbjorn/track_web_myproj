@@ -1,0 +1,50 @@
+footer {
+    padding: 1em;
+    color:gray;
+    background-color: aliceblue;
+    clear: left;
+    text-align: center;
+}
+
+div.headline {
+    color: green;
+    text-align: center;
+}
+
+div.commdiv {
+    text-align: left;
+    background-color: azure;
+    margin-top: 1mm;
+    margin-bottom: 1mm;
+    padding: 6pt;
+}
+
+div.textAr {
+    text-align: center;
+    background-color: lightgray;
+    margin-left: 22%;
+    margin-right: 22%;
+    margin-top: 1mm;
+    margin-bottom: 1mm;
+    padding: 6pt;
+}
+
+div.commbox {
+    text-align: center;
+    background-color: lightgray;
+    margin-left: 22%;
+    margin-right: 22%;
+    margin-top: 1mm;
+    margin-bottom: 1mm;
+    padding: 6pt;
+}
+
+ol.commls {
+    list-style-type: none;
+    align-content: center;
+    align-self: center;
+}
+
+span.ctime {
+    color: deeppink;
+}

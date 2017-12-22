@@ -1,0 +1,107 @@
+
+</html><!DOCTYPE html>
+<html lang="en">
+{% block head %}
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+        <style>
+            {% block style %}
+                footer {
+            padding: 1em;
+            color:gray;
+            background-color: aliceblue;
+            clear: left;
+            text-align: center;
+        }
+        div.headline {
+            color: green;
+            text-align: center;
+        }
+        div.commdiv {
+            text-align: left;
+            background-color: azure;
+            margin-top: 1mm;
+            margin-bottom: 1mm;
+            padding: 6pt;
+        }
+        div.textAr {
+            text-align: center;
+            background-color: lightgray;
+            margin-left: 22%;
+            margin-right: 22%;
+            margin-top: 1mm;
+            margin-bottom: 1mm;
+            padding: 6pt;
+        }
+        div.commbox {
+            text-align: center;
+            background-color: lightgray;
+            margin-left: 22%;
+            margin-right: 22%;
+            margin-top: 1mm;
+            margin-bottom: 1mm;
+            padding: 6pt;
+        }
+        ol.commls {
+            list-style-type: none;
+            align-content: center;
+            align-self: center;
+        }
+        span.ctime {
+            color: deeppink;
+        }
+            {% endblock %}
+        </style>
+</head>
+{% endblock %}
+<body>
+    {% block header %}
+        <header>
+        <div class="headline">
+            <h2><a style="color: green; text-decoration: none;" href={% url "core:startpage" %}>Blog for django developers</a></h2><br>
+            <a href={% url "blog:blog_list" %}>Blogs</a> <a href={% url "core:profiles" %}> Users</a>
+            <a href={% url "blog:category_list" %}>Categories</a><br>
+            {% if user.is_authenticated %}
+                logged as:
+                <a href={% url "core:profile_main_page" pk=user.id %}>{{ user.username }}</a>
+                <a href={% url "core:logout" %}>logout</a>
+            {% else %}
+                <a href={% url "core:login" %}>login</a>
+                or <a href={% url "core:signup" %}>sign up</a>
+            {% endif %}
+        </div>
+        </header>
+    {% endblock %}
+    {% block content%}
+        <div style="color:orange">
+        <h1 style="text-align: center">Hello! {{ user }}</h1>
+        </div>
+        <div class="commbox">
+            Last {{ Posts.count }} posts:
+            <ol class="commls">
+                {% for post in Posts.all %}
+                    <li style="padding: 3pt">Post <a href={% url "blog:post_detail" pk=post.id %}>{{ post.name }}</a>
+                        created at <span class="ctime">{{ post.created_at }}</span>
+                        by {% include "profile_ref.html" with user=post.author %}
+                        in {% include "blog_ref.html" with blog=post.blog %}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="commbox">
+            Blogs:
+            <ol class="commls">
+                {% for blog in Blogs.all %}
+                    <li style="padding: 3pt">Blog <a href={% url "blog:blog_detail" pk=blog.id %}>{{ blog.name }}</a>
+                        created at <span class="ctime">{{ blog.created_at }}</span> by {% include "profile_ref.html" with user=blog.owner %}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    {% endblock %}
+    {% block footer %}
+        <footer>
+        Created by Semjon.
+        </footer>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "core/g_base.html" %}
+{% block content %}
+    <div class="panel panel-primary main-info-panel">
+        <div class="panel-heading">
+            {% if user == cuser %} About you {% else %} {{ cuser.username }}'s info {% endif %}
+        </div>
+        <div class="panel-body">
+            Username: {{ cuser }} <br>
+            First name: {{ cuser.first_name|default:"undefined" }} <br>
+            Last name: {{ cuser.last_name|default:"undefined" }} <br>
+            Joined at: {{ cuser.date_joined }}<br>
+        </div>
+    </div>
+    <div>
+
+    </div>
+
+{% endblock %}
+{% block sidebar %}
+    <li class="list-group-item"><a href={% url "core:profile_blogs" pk=cuser.pk%}>Blogs</a></li>
+    <li class="list-group-item"><a href={% url "core:profile_posts" pk=cuser.pk%}>Posts</a></li>
+    <li class="list-group-item"><a href={% url "core:profile_comments" pk=cuser.pk%}>Comments</a></li>
+    <li class="list-group-item"><a href={% url "core:profile_favorites" pk=cuser.pk%}>Favorites</a></li>
+    {% if user == cuser %}
+    <li class="list-group-item"><a href={% url "core:profile_update_pass" %}>Change password</a></li>
+    <li class="list-group-item">{% include "update_profile_ref.html" with profileid=cuser.pk %}</li>
+    {% endif %}
+{% endblock %}

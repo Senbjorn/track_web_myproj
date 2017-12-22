@@ -95,7 +95,7 @@ class PostListForm(forms.Form):
 
 
 class BlogList(ListView):
-    template_name = "blog_list.html"
+    template_name = "blog/list_blogs.html"
     context_object_name = "blogList"
     model = Blog
     my_form = None
@@ -108,6 +108,7 @@ class BlogList(ListView):
         context = super(BlogList, self).get_context_data(**kwargs)
         context['title'] = "Blog list"
         context['form'] = self.my_form
+        context['heading'] = "Blogs"
         return context
 
     def get_queryset(self):
@@ -127,7 +128,7 @@ class BlogList(ListView):
 
 
 class BlogDetail(ListView):
-    template_name = "blog_detail.html"
+    template_name = "blog/detail_blog.html"
     context_object_name = "posts"
     model = Post
     my_blog = None
@@ -140,9 +141,10 @@ class BlogDetail(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(BlogDetail, self).get_context_data(**kwargs)
-        context['title'] = "Blog details"
+        context['title'] = self.my_blog.name
         context['idblog'] = self.my_blog
         context['form'] = self.my_form
+        context['heading'] = self.my_blog.name
         return context
 
     def get_queryset(self):
@@ -174,7 +176,7 @@ class PostList(ListView):
 
 
 class PostDetail(ListView):
-    template_name = "post_detail.html"
+    template_name = "blog/detail_post.html"
     context_object_name = "comments"
     model = Comment
     my_form = None
@@ -187,9 +189,10 @@ class PostDetail(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PostDetail, self).get_context_data(**kwargs)
-        context['title'] = "Post details"
+        context['title'] = self.my_post.name
         context['idpost'] = self.my_post
         context['form'] = self.my_form
+        context['heading'] = self.my_post.name
         return context
 
     def get_queryset(self):
@@ -227,14 +230,20 @@ class UpdateBlog(UserPassesTestMixin, UpdateView):
     model = Blog
     fields = 'description',
     context_object_name = 'blog'
+    success_url = ""
 
     raise_exception = True
 
     def test_func(self):
         return self.get_object().owner == self.request.user
 
+    def form_valid(self, form):
+        super(UpdateBlog, self).form_valid(form)
+        from django.http import HttpResponse
+        return HttpResponse("OK")
+
     def get_success_url(self):
-        return reverse('blog:blog_detail', kwargs={'pk': self.object.pk})
+        return self.success_url
 
 
 class UpdatePost(UserPassesTestMixin, UpdateView):
@@ -242,14 +251,20 @@ class UpdatePost(UserPassesTestMixin, UpdateView):
     model = Post
     fields = 'text',
     context_object_name = "post"
+    success_url = ""
 
     raise_exception = True
 
     def test_func(self):
         return self.get_object().author == self.request.user
 
+    def form_valid(self, form):
+        super(UpdatePost, self).form_valid(form)
+        from django.http import HttpResponse
+        return HttpResponse("OK")
+
     def get_success_url(self):
-        return reverse('blog:post_detail', kwargs={'pk': self.object.pk})
+        return self.success_url
 
 
 class CreatePost(UserPassesTestMixin, CreateView):
@@ -307,4 +322,16 @@ class CategoryList(ListView):
                     query = query.order_by(self.my_form.cleaned_data['order_by'])
             if self.my_form.cleaned_data['search']:
                 query = query.filter(name=self.my_form.cleaned_data['search'])
+        return query
+
+
+class PostCommentsList(ListView):
+    template_name = "post_comments_list.html"
+    model = Comment
+    context_object_name = "comments"
+
+    def get_queryset(self):
+        query = super(PostCommentsList, self).get_queryset()
+        post = get_object_or_404(Post.objects.all(), id=self.kwargs['pk'])
+        query.filter(post=post)
         return query

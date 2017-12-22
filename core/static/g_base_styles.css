@@ -1,0 +1,45 @@
+
+body .wrapper {
+		padding: 0px 0 10px 0;
+}
+
+body .wrapper .heading {
+    margin: 10px 0;
+}
+
+body .wrapper .heading .heading-div {
+    background-color: lightgreen;
+}
+
+body .wrapper .row {
+    margin-top: 10px;
+}
+
+body .wrapper header {
+    padding: 10px 0;
+}
+
+body .wrapper .submenu .li:hover {
+    class: active;
+}
+
+body footer {
+    text-align: center;
+    background: #7e7e7e;
+  	color: #dbdbdb;
+  	font-size: 14px;
+}
+
+.list-element .panel-heading {
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+.submenu .list-group-item:hover a{
+    color: white;
+}
+
+.submenu .list-group-item a{
+    text-decoration: none;
+    color: black;
+}

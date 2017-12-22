@@ -1,0 +1,42 @@
+{% extends "core/g_base.html" %}
+{% block content%}
+    <div class="panel panel-primary main-info-panel">
+        <div class="panel-heading">
+            Post info
+        </div>
+        <div class="panel-body">
+            Created at: <span class="ctime">{{ idpost.created_at }}</span> <br>
+            Last update: <span class="ctime">{{ idpost.updated_at }}</span> <br>
+            Blog: {% include "blog/ref_blog.html" with blog=idpost.blog %} <br>
+            Author: {% include "profile_ref.html" with user=idpost.author %}
+        </div>
+    </div>
+    <div class="panel panel-default main-content-panel">
+        <div class="panel-body">
+            {{ idpost.text }}
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn m-1" data-button-like-post="{{ post.id }}">likes <span class="badge">{{ post.likes|length }}</span></button>
+        </div>
+    </div>
+    <div>{% include "update_post_ref.html" with postid=idpost.id %}</div>
+    <div>
+        {% include "create_comment_ref.html" with postid=idpost.id %}<br>
+        {% include "search_form.html" with form=form %}
+        Comments:
+        <div class="panel-group">
+            {% for comment in comments %}
+                {% include "comments/list_element_comment.html" with comment=comment%}
+            {% endfor %}
+        </div>
+    </div>
+{#    <div class="commdiv">#}
+{#        Likes:{{ idpost.likes.all|length }}#}
+{#    </div>#}
+{% endblock %}
+{% block sidebar %}
+    <li class="list-group-item" data-sidebar-create-post="{{ idpost.id }}">New post</li>
+    <li class="list-group-item" data-sidebar-edit-post="{{ idpost.id }}">Edit</li>
+    <li class="list-group-item"><a href={% url "blog:blog_detail" pk=idpost.blog.id %}>Back to blog</a></li>
+{% endblock %}
+

@@ -1,9 +1,20 @@
-{% extends "base.html" %}
-{% block content %}
-    <div class="commdiv" style="text-align: center; color: orange">
-        Updating of comment {% include "comment_ref.html" with comment=comment %}
-    </div>
-    <div class="commdiv">
-        {% include "default_form_template.html" with form=form value="update" %}
-    </div>
-{% endblock %}
+ <div class="commdiv">
+     <form data-formType="editForm" data-formLabel="Edit comment" action="{% url "comments:comment_update" pk=comment.id %}" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% if field.help_text %}
+                <span style="color: gray; font-size: small">{{ field.help_text|safe }}</span>
+            {% endif %}
+            <br>
+            {% for error in field.errors %}
+                <span style="color: red; forn-size: small">{{ error }}</span>
+            {% endfor %}
+            {% if field.errors %}
+                <br>
+            {% endif %}
+        {% endfor %}<br>
+        <input type="submit" value="Save">
+    </form>
+ </div>

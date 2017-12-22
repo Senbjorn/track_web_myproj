@@ -65,9 +65,17 @@ class UpdateComment(UserPassesTestMixin, UpdateView):
     model = Comment
     fields = "text",
     raise_exception = True
+    success_url = ""
 
     def test_func(self):
         return self.get_object().author == self.request.user
 
+    def form_valid(self, form):
+        super(UpdateComment, self).form_valid(form)
+        from django.http import HttpResponse
+        return HttpResponse("OK");
+
     def get_success_url(self):
-        return reverse("comments:comment_detail", kwargs={'pk': self.object.id})
+        return self.success_url;
+
+

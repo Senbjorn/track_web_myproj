@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
+    url(r'^gbase/$', g_base_view, name="gbase"),
     url(r'^main_page/$', StartPage.as_view(), name="startpage"),
     url(r'^profiles/$', ProfileList.as_view(), name="profiles"),
     url(r'^profile/id(?P<pk>\d+)/$', ProfileMainDetail.as_view(), name="profile_main_page"),

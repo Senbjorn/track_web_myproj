@@ -1,0 +1,46 @@
+{% extends "core/g_base.html" %}
+{% block content%}
+    <div class="panel panel-primary main-info-panel">
+        <div class="panel-heading">
+            Blog info
+        </div>
+        <div class="panel-body">
+            Created at: <span class="ctime">{{ idblog.created_at }}</span> <br>
+            Last update: <span class="ctime">{{ idblog.updated_at }}</span> <br>
+            Owner: {% include "profile_ref.html" with user=idblog.owner %}
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading category-list-panel">
+            Categories
+        </div>
+        <div class="panel-body">
+            <div class="d-flex flex-wrap">
+                {% for cat in idblog.categories.all %}
+                    {% include "blog/list_element_category.html" with category=cat %}
+                {% endfor%}
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default main-content-panel">
+        <div class="panel-body">
+            {{ idblog.description }}
+        </div>
+    </div>
+    <div>
+        <div style="text-align: center">
+            {% include "create_post_ref.html" with blogid=idblog.id %}
+        </div>
+        {% include "search_form.html" with form=form %}
+        Posts:
+        <div class="panel-group">
+        {% for post in posts %}
+            {% include "blog/list_element_post.html" with post=post %}
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block sidebar %}
+    <li class="list-group-item" data-sidebar-create-blog="{{ idblog.id }}">New blog</li>
+    <li class="list-group-item" data-sidebar-edit-blog="{{ idblog.id }}">Edit</li>
+{% endblock %}

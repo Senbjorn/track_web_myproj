@@ -1,4 +1,4 @@
-from django.shortcuts import reverse, get_object_or_404
+from django.shortcuts import reverse, get_object_or_404, render
 from django.contrib.auth import login
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -11,15 +11,15 @@ from core.models import *
 
 
 class StartPage(ListView):
-    template_name = "base.html"
+    template_name = "core/g_base.html"
     model = Blog
 
     def get_context_data(self, **kwargs):
         context = super(StartPage, self).get_context_data(**kwargs)
-        context['Blogs'] = Blog.objects.order_by('-created_at')[0:10]
-        context['Posts'] = Post.objects.order_by('-created_at')[0:10]
+        # context['Blogs'] = Blog.objects.order_by('-created_at')[0:10]
+        # context['Posts'] = Post.objects.order_by('-created_at')[0:10]
         context['title'] = 'Start page'
-        context['user'] = self.request.user
+        # context['user'] = self.request.user
         return context
 
 
@@ -38,16 +38,24 @@ class ProfileList(ListView):
 
 
 class ProfileMainDetail(DetailView):
-    template_name = "profile_main_page.html"
+    template_name = "core/detail_user.html"
     context_object_name = "cuser"
     model = User
+    my_user = None
 
     def get_context_data(self, **kwargs):
         context = super(ProfileMainDetail, self).get_context_data(**kwargs)
-        context['title'] = 'Profile'
+        context['title'] = self.my_user.username
         context['you'] = self.request.user
+        if self.request.user != self.my_user:
+            context['heading'] = self.my_user.username
+        else:
+            context['heading'] = "Your space"
         return context
 
+    def dispatch(self, request, *args, **kwargs):
+        self.my_user = get_object_or_404(User.objects.all(), id=kwargs['pk'])
+        return super(ProfileMainDetail, self).dispatch(request, *args, **kwargs)
     # def get_object(self):
     #     obj = super(ProfileMainDetail, self).get_object()
     #     if (obj.id != self.request.user.id):
@@ -158,3 +166,6 @@ class ProfileUpdatePass(UpdateView):
     def get_success_url(self):
         login(self.request, get_object_or_404(User.objects.all(), id=self.request.user.id))
         return reverse("core:profile_main_page", kwargs={'pk': self.request.user.id})
+
+def g_base_view(request):
+    return render(request, "core/g_base.html");

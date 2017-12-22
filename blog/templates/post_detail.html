@@ -15,16 +15,9 @@
         {% include "create_comment_ref.html" with postid=idpost.id %}<br>
         {% include "search_form.html" with form=form %}
         Comments:
-        <ol>
-        {% for comment in comments %}
-            <li>
-                <a href={% url "comments:comment_detail" pk=comment.id %}>{{ comment }}</a>
-                <div class="textAr">
-                    {{ comment.text }}
-                </div>
-            </li>
-        {% endfor %}
-        </ol>
+        <div class="pComments">
+        {% include "post_comments_list.html" with comments=comments %}
+        </div>
     </div>
     <div class="commdiv">
         Likes:{{ idpost.likes.all|length }}

@@ -1,0 +1,24 @@
+<div class="list-element panel panel-info">
+    <div class="panel-heading">
+        {% include "blog/ref_post.html" with post=post%}
+    </div>
+    <div class="list-element-text panel-body">
+        {{ post.text }}
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="column col-md-7">
+                owner: {% include "core/ref_user.html" with user=post.author%}
+                updated at: {{ post.updated_at }}
+            </div>
+            <div class="column col-md-5 ">
+                <div class="d-md-flex justify-content-end">
+                    {% if user == post.author %}
+                        <button type="button" class="btn m-1" data-button-edit-post="{{ post.id }}">edit</button>
+                    {% endif %}
+                    <button type="button" class="btn m-1" data-button-like-post="{{ post.id }}">likes <span class="badge">{{ post.likes|length }}</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

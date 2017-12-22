@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
     <div class="commdiv" style="text-align: center">
         {% if not posts %}
             No posts((
@@ -8,7 +9,9 @@
             <ol>
             {% for post in posts %}
                 <li>post {% include "post_ref.html" with post=post %}
-                    in blog {% include "blog_ref.html" with blog=post.blog %}</li>
+                    in blog {% include "blog_ref.html" with blog=post.blog %}
+                    {% include "update_post_ref.html" with postid=post.id%}
+                </li>
             {% endfor %}
             </ol>
         {% endif %}
