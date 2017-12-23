@@ -1,0 +1,10 @@
+<div class="list-element panel panel-info">
+    <div class="panel-heading">
+        {% include "core/ref_user.html" with user=cuser %}
+    </div>
+    <div class="list-element-user-info panel-body">
+        First name: {{ cuser.first_name|default:"undefined" }} <br>
+        Last name: {{ cuser.last_name|default:"undefined" }} <br>
+        Joined at: {{ cuser.date_joined }}<br>
+    </div>
+</div>

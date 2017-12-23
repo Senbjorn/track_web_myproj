@@ -10,10 +10,15 @@
             </div>
             <div class="column col-md-5 ">
                 <div class="d-md-flex justify-content-end">
-                    {% if user == comment.author %}
-                        <button type="button" class="btn m-1" data-button-edit-comment="{{ comment.id }}">edit</button>
-                    {% endif %}
-                    <button type="button" class="btn m-1" data-button-like-comment="{{ comment.id }}">likes <span class="badge">{{ comment.likes|length }}</span></button>
+                    <form data-action-type="LIKE" data-like-counter-id="LCID{{ idpost.id }}" method="post" action="{% url "like:like" %}">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ user.id }}" name="user_id">
+                        <input type="hidden" value="{{ comment.id }}" name="object_id">
+                        <input type="hidden" value="Post" name="content_type">
+                        <button type="submit" class="btn m-1">
+                            likes <span class="badge" id="LCID{{ comment.id }}">{{ comment.likes.all|length }}</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

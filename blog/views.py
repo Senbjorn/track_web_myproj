@@ -98,6 +98,8 @@ class BlogList(ListView):
     template_name = "blog/list_blogs.html"
     context_object_name = "blogList"
     model = Blog
+    paginate_by = 2
+    paginate_orphans = 1
     my_form = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -131,6 +133,8 @@ class BlogDetail(ListView):
     template_name = "blog/detail_blog.html"
     context_object_name = "posts"
     model = Post
+    paginate_by = 2
+    paginate_orphans = 1
     my_blog = None
     my_form = None
 
@@ -179,6 +183,8 @@ class PostDetail(ListView):
     template_name = "blog/detail_post.html"
     context_object_name = "comments"
     model = Comment
+    paginate_by = 2
+    paginate_orphans = 1
     my_form = None
     my_post = None
 

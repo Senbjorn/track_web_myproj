@@ -14,9 +14,22 @@
             <div class="column col-md-5 ">
                 <div class="d-md-flex justify-content-end">
                     {% if user == post.author %}
-                        <button type="button" class="btn m-1" data-button-edit-post="{{ post.id }}">edit</button>
+                        <form data-action-type="EDIT" method="post" action="">
+                            {% csrf_token %}
+                            <button type="button" class="btn m-1">
+                                edit
+                            </button>
+                        </form>
                     {% endif %}
-                    <button type="button" class="btn m-1" data-button-like-post="{{ post.id }}">likes <span class="badge">{{ post.likes|length }}</span></button>
+                    <form data-action-type="LIKE" data-like-counter-id="LID{{ post.id }}" method="post" action="{% url "like:like" %}">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ user.id }}" name="user_id">
+                        <input type="hidden" value="{{ post.id }}" name="object_id">
+                        <input type="hidden" value="Post" name="content_type">
+                        <button type="submit" class="btn m-1">
+                            likes <span class="badge" id="LID{{ post.id }}">{{ post.likes.all|length }}</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

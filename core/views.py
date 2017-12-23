@@ -7,6 +7,7 @@ from django import forms
 from blog.models import *
 from comments.models import *
 from core.models import *
+from django.core.paginator import Paginator, InvalidPage
 # Create your views here.
 
 
@@ -24,12 +25,15 @@ class StartPage(ListView):
 
 
 class ProfileList(ListView):
-    template_name = "profile_list.html"
+    template_name = "core/list_users.html"
     context_object_name = "Users"
+    paginate_by = 2
+    paginate_orphans = 1
 
     def get_context_data(self, **kwargs):
         context = super(ProfileList, self).get_context_data(**kwargs)
         context['title'] = 'Profiles'
+        context['heading'] = 'Profiles'
         return context
 
     def get_queryset(self):

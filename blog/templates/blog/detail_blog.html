@@ -39,6 +39,7 @@
         {% endfor %}
         </div>
     </div>
+    {% include "core/paginate_bar.html" with pages=page_obj %}
 {% endblock %}
 {% block sidebar %}
     <li class="list-group-item" data-sidebar-create-blog="{{ idblog.id }}">New blog</li>

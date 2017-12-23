@@ -1,8 +1,9 @@
 {% extends "core/g_base.html" %}
 {% block  content %}
-    <div class="panel-group">Users:
+    <div class="panel-group">
     {% for cuser in Users %}
         {% include "core/list_element_user.html" with cuser=cuser%}
     {% endfor %}
     </div>
+    {% include "core/paginate_bar.html" with pages=page_obj %}
 {% endblock %}

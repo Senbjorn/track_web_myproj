@@ -12,9 +12,11 @@
                 updated at: {{ blog.updated_at }}
             </div>
             <div class="column col-md-5">
-                <div class="d-md-flex justify-content-end">
+                <div class="d-md-flex justify-content-end flex-wrap">
                     {% if user == blog.owner %}
-                        <button type="button" class="btn m-1" data-button-edit-blog="{{ blog.id }}">edit</button>
+                        <form data-action-type="EDIT" method="post" action="">
+                            <button type="submit" class="btn m-1">edit</button>
+                        </form>
                     {% endif %}
 {#                    <button type="button" class="btn m-1" data-button-like-blog="{{ blog.id }}">likes <span class="badge">{{ blog.likes|length }}</span></button>#}
                 </div>

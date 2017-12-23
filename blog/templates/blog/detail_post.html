@@ -16,7 +16,15 @@
             {{ idpost.text }}
         </div>
         <div class="panel-footer">
-            <button type="button" class="btn m-1" data-button-like-post="{{ post.id }}">likes <span class="badge">{{ post.likes|length }}</span></button>
+            <form data-action-type="LIKE" data-like-counter-id="LID{{ idpost.id }}" method="post" action="{% url "like:like" %}">
+                {% csrf_token %}
+                <input type="hidden" value="{{ user.id }}" name="user_id">
+                <input type="hidden" value="{{ idpost.id }}" name="object_id">
+                <input type="hidden" value="Post" name="content_type">
+                <button type="submit" class="btn m-1">
+                    likes <span class="badge" id="LID{{ idpost.id }}">{{ idpost.likes.all|length }}</span>
+                </button>
+            </form>
         </div>
     </div>
     <div>{% include "update_post_ref.html" with postid=idpost.id %}</div>
@@ -30,6 +38,7 @@
             {% endfor %}
         </div>
     </div>
+    {% include "core/paginate_bar.html" with pages=page_obj %}
 {#    <div class="commdiv">#}
 {#        Likes:{{ idpost.likes.all|length }}#}
 {#    </div>#}

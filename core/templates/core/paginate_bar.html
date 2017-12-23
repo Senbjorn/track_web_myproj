@@ -1,0 +1,28 @@
+{% load query_change %}
+<div class="paginate-bar">
+    <ul class="pagination">
+        {% if pages.has_previous %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.previous_page_number %}">Previous</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" href="{{ request.GET.url_encode }}">Previous</a></li>
+        {% endif %}
+        {% if pages.has_previous and pages.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.previous_page_number %}">{{ pages.previous_page_number }}</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.number %}">{{  pages.number }}</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.next_page_number %}">{{ pages.next_page_number }}</a></li>
+        {% elif  pages.has_previous%}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.previous_page_number %}">{{ pages.previous_page_number }}</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.number %}">{{  pages.number }}</a></li>
+        {% elif pages.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.number %}">{{  pages.number }}</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.next_page_number %}">{{ pages.next_page_number }}</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.number %}">{{  pages.number }}</a></li>
+        {% endif %}
+        {% if pages.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' pages.next_page_number %}">Next</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" href="{{ request.GET.url_encode }}">Next</a></li>
+        {% endif %}
+    </ul>
+</div>
