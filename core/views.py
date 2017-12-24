@@ -78,9 +78,16 @@ class ProfileDataList(ListView):
 
 
 class ProfileBlogList(ProfileDataList):
-    template_name = "profile_blogs.html"
+    template_name = "core/detail_user_blogs.html"
     model = Blog
     context_object_name = 'blogs'
+    paginate_by = 10
+    paginate_orphans = 2
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileBlogList, self).get_context_data(**kwargs)
+        context['cuser'] = self.my_user
+        return context
 
     def get_queryset(self):
         queryset = super(ProfileBlogList, self).get_queryset()
@@ -88,18 +95,32 @@ class ProfileBlogList(ProfileDataList):
 
 
 class ProfilePostList(ProfileDataList):
-    template_name = "profile_posts.html"
+    template_name = "core/detail_user_posts.html"
     model = Post
     context_object_name = 'posts'
+    paginate_by = 10
+    paginate_orphans = 2
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfilePostList, self).get_context_data(**kwargs)
+        context['cuser'] = self.my_user
+        return context
 
     def get_queryset(self):
         return super(ProfilePostList, self).get_queryset().filter(author=self.my_user)
 
 
 class ProfileCommentList(ProfileDataList):
-    template_name = "profile_comments.html"
+    template_name = "core/detail_user_comments.html"
     model = Comment
     context_object_name = 'comments'
+    paginate_by = 10
+    paginate_orphans = 2
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileCommentList, self).get_context_data(**kwargs)
+        context['cuser'] = self.my_user
+        return context
 
     def get_queryset(self):
         queryset = super(ProfileCommentList, self).get_queryset()
@@ -165,6 +186,7 @@ class ProfileUpdate(UpdateView):
     def get_success_url(self):
         return self.success_url
 
+
 class ProfileUpdatePass(UpdateView):
     template_name = "core/action_update_password_user.html"
     form_class = PasswordChangeForm
@@ -195,6 +217,7 @@ class ProfileLogin(LoginView):
     def form_valid(self, form):
         super(ProfileLogin, self).form_valid(form)
         return HttpResponse("OK")
+
 
 def g_base_view(request):
     return render(request, "core/g_base.html");

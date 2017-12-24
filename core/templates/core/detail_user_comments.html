@@ -1,0 +1,9 @@
+{% extends "core/detail_user.html" %}
+{% block content %}
+    <div class="panel-group">
+        {% for comment in comments %}
+            {% include "comments/list_element_comment.html" with comment=comment %}
+        {% endfor %}
+    </div>
+    {% include "core/paginate_bar.html" with pages=page_obj %}
+{% endblock %}

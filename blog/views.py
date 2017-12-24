@@ -162,15 +162,16 @@ class BlogDetail(ListView):
         return post_form_filter(self.my_form, query)
 
 
-class PostList(ListView):
-    template_name = "post_list.html"
-    context_object_name = "postList"
+class GETPostList(ListView):
+    template_name = "blog/list_update_posts.html"
+    context_object_name = "posts"
     model = Post
 
-    def get_context_data(self, **kwargs):
-        context = super(PostList, self).get_context_data(**kwargs)
-        context['title'] = "Post list"
-        return context
+
+class GETBlogList(ListView):
+    template_name = "blog/list_update_blogs.html"
+    context_object_name = "blogs"
+    model = Blog
 
 
 class PostDetail(ListView):

@@ -1,0 +1,9 @@
+{% extends "core/detail_user.html" %}
+{% block content %}
+    <div class="panel-group">
+        {% for blog in blogs %}
+            {% include "blog/list_element_blog.html" with blog=blog %}
+        {% endfor %}
+    </div>
+    {% include "core/paginate_bar.html" with pages=page_obj %}
+{% endblock %}
