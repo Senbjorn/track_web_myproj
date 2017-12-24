@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-    <div class="commdiv">
-        Checked by: <a href={% url "core:profile_main_page" pk=like.user.id %}>{{ like.user }}</a>
-    </div>
-    <div class="commdiv">
-        Back to the list
-    </div>
-{% endblock %}

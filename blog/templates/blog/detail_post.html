@@ -1,5 +1,19 @@
 {% extends "core/g_base.html" %}
 {% block content%}
+
+
+{#    <form>#}
+{#        <div class="form-group">#}
+{#            <label for="exampleInputEmail1">Email address</label>#}
+{#            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">#}
+{#            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>#}
+{#        </div>#}
+{#        <div class="form-group">#}
+{#            <label for="exampleInputPassword1">Password</label>#}
+{#            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">#}
+{#        </div>#}
+{#        <button type="submit" class="btn btn-primary">Submit</button>#}
+{#    </form>#}
     <div class="panel panel-primary main-info-panel">
         <div class="panel-heading">
             Post info
@@ -16,22 +30,38 @@
             {{ idpost.text }}
         </div>
         <div class="panel-footer">
-            <form data-action-type="LIKE" data-like-counter-id="LID{{ idpost.id }}" method="post" action="{% url "like:like" %}">
-                {% csrf_token %}
-                <input type="hidden" value="{{ user.id }}" name="user_id">
-                <input type="hidden" value="{{ idpost.id }}" name="object_id">
-                <input type="hidden" value="Post" name="content_type">
-                <button type="submit" class="btn m-1">
-                    likes <span class="badge" id="LID{{ idpost.id }}">{{ idpost.likes.all|length }}</span>
-                </button>
-            </form>
+            <div class="d-flex flex-wrap">
+                {% if user == idpost.author %}
+                    <button type="button" class="main-modal-link btn m-1"
+                            data-main-modal-label="Edit post ({{ idpost.name }})"
+                            data-main-modal-get-link={% url "blog:post_update" pk=idpost.id %}>
+                        Edit
+                    </button>
+                {% endif %}
+                <form data-action-type="LIKE" data-like-counter-id="LID{{ idpost.id }}" method="post" action="{% url "like:like" %}">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ user.id }}" name="user_id">
+                    <input type="hidden" value="{{ idpost.id }}" name="object_id">
+                    <input type="hidden" value="Post" name="content_type">
+                    <button type="submit" class="btn m-1">
+                        likes <span class="badge" id="LID{{ idpost.id }}">{{ idpost.likes.all|length }}</span>
+                    </button>
+                </form>
+            </div>
         </div>
+    </div>
+    <button class="btn" data-toggle="collapse" data-target="#post-search-form">Search settings</button>
+    <div class="panel panel-default collapse" id="post-search-form">
+            <div class="panel-heading">
+                Search form
+            </div>
+            <div class="panel-body">
+                {% include "core/template_form_u_search.html" with form=form %}
+            </div>
     </div>
     <div>{% include "update_post_ref.html" with postid=idpost.id %}</div>
     <div>
-        {% include "create_comment_ref.html" with postid=idpost.id %}<br>
-        {% include "search_form.html" with form=form %}
-        Comments:
+{#        {% include "create_comment_ref.html" with postid=idpost.id %}<br>#}
         <div class="panel-group">
             {% for comment in comments %}
                 {% include "comments/list_element_comment.html" with comment=comment%}
@@ -44,8 +74,16 @@
 {#    </div>#}
 {% endblock %}
 {% block sidebar %}
-    <li class="list-group-item" data-sidebar-create-post="{{ idpost.id }}">New post</li>
-    <li class="list-group-item" data-sidebar-edit-post="{{ idpost.id }}">Edit</li>
-    <li class="list-group-item"><a href={% url "blog:blog_detail" pk=idpost.blog.id %}>Back to blog</a></li>
+    <li class="list-group-item">New post</li>
+    <li class="list-group-item" data-item-type="a" data-href={% url "blog:blog_detail" pk=idpost.blog.id %}>Back to blog</li>
+    {% if user == post.author %}
+        <li
+            class="list-group-item main-modal-link"
+            data-main-modal-label="Edit post ({{ idpost.name }})"
+            data-main-modal-get-link={% url "blog:post_update" pk=idpost.id %}>
+            Edit post
+        </li>
+    {% endif %}
+
 {% endblock %}
 

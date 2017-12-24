@@ -7,25 +7,41 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from comments.models import *
 
 
+def comment_form_filter(my_form, query):
+    if my_form.is_valid():
+        if my_form.cleaned_data['order_by']:
+            if my_form.cleaned_data['direction']:
+                if my_form.cleaned_data['direction'] == 'asc':
+                    query = query.order_by(my_form.cleaned_data['order_by'])
+                elif my_form.cleaned_data['direction'] == 'desc':
+                    query = query.order_by('-{}'.format(my_form.cleaned_data['order_by']))
+            else:
+                query = query.order_by(my_form.cleaned_data['order_by'])
+        if my_form.cleaned_data['search']:
+            query = query.filter(author__username=my_form.cleaned_data['search'])
+    return query
+
+
 class CommentListForm(forms.Form):
+    search = forms.CharField(required=False, label='Author')
     order_by = forms.ChoiceField(
         choices=(
             ('author', 'author'),
-            ('id', 'id'),
             ('created_at', 'date')
         ),
         required=False,
-        label='sort by'
+        label='sort by',
+        # widget=forms.RadioSelect
     )
     direction = forms.ChoiceField(
         choices=(
-            ('+', 'increase'),
-            ('-', 'decrease')
+            ('asc', 'asc'),
+            ('desc', 'desc')
         ),
         required=False,
-        label='order'
+        label='order',
+        # widget=forms.RadioSelect
     )
-    search = forms.CharField(required=False, label='Author')
 
 
 class CommentDetail(DetailView):

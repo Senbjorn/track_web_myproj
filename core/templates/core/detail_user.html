@@ -17,12 +17,26 @@
 
 {% endblock %}
 {% block sidebar %}
-    <li class="list-group-item"><a href={% url "core:profile_blogs" pk=cuser.pk%}>Blogs</a></li>
-    <li class="list-group-item"><a href={% url "core:profile_posts" pk=cuser.pk%}>Posts</a></li>
-    <li class="list-group-item"><a href={% url "core:profile_comments" pk=cuser.pk%}>Comments</a></li>
-    <li class="list-group-item"><a href={% url "core:profile_favorites" pk=cuser.pk%}>Favorites</a></li>
+    <li class="list-group-item" data-item-type="a" data-href={% url "core:profile_blogs" pk=cuser.pk%}>Blogs</li>
+    <li class="list-group-item" data-item-type="a" data-href={% url "core:profile_posts" pk=cuser.pk%}>Posts</li>
+    <li class="list-group-item" data-item-type="a" data-href={% url "core:profile_comments" pk=cuser.pk%}>Comments</li>
+    <li class="list-group-item" data-item-type="a" data-href={% url "core:profile_favorites" pk=cuser.pk%}>Favorites</li>
     {% if user == cuser %}
-    <li class="list-group-item"><a href={% url "core:profile_update_pass" %}>Change password</a></li>
-    <li class="list-group-item">{% include "update_profile_ref.html" with profileid=cuser.pk %}</li>
+        <li class="list-group-item main-modal-link"
+                data-main-modal-label="Change password"
+                data-main-modal-get-link={% url "core:profile_update_pass" %}>
+            Change password
+        </li>
+        <li class="list-group-item main-modal-link"
+                data-main-modal-label="Edit profile"
+                data-main-modal-get-link={% url "core:profile_update" %}>
+            Edit profile
+        </li>
+        <li
+                class="list-group-item main-modal-link"
+                data-main-modal-label="Create blog"
+                data-main-modal-get-link={% url "blog:blog_create" %}>
+            New blog
+        </li>
     {% endif %}
 {% endblock %}

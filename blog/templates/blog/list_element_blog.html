@@ -9,14 +9,18 @@
         <div class="row">
             <div class="column col-md-7">
                 owner: {% include "core/ref_user.html" with user=blog.owner %}
-                updated at: {{ blog.updated_at }}
+                created at: {{ blog.created_at }}
             </div>
             <div class="column col-md-5">
                 <div class="d-md-flex justify-content-end flex-wrap">
                     {% if user == blog.owner %}
-                        <form data-action-type="EDIT" method="post" action="">
-                            <button type="submit" class="btn m-1">edit</button>
-                        </form>
+                       <button
+                            type="button"
+                            class="main-modal-link btn m-1"
+                            data-main-modal-label="Edit blog({{ blog.name }})"
+                            data-main-modal-get-link={% url "blog:blog_update" pk=blog.id %}>
+                        Edit
+                        </button>
                     {% endif %}
 {#                    <button type="button" class="btn m-1" data-button-like-blog="{{ blog.id }}">likes <span class="badge">{{ blog.likes|length }}</span></button>#}
                 </div>

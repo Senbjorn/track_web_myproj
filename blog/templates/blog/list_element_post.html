@@ -9,17 +9,17 @@
         <div class="row">
             <div class="column col-md-7">
                 owner: {% include "core/ref_user.html" with user=post.author%}
-                updated at: {{ post.updated_at }}
+                created at: {{ post.created_at }}
             </div>
             <div class="column col-md-5 ">
                 <div class="d-md-flex justify-content-end">
                     {% if user == post.author %}
-                        <form data-action-type="EDIT" method="post" action="">
-                            {% csrf_token %}
-                            <button type="button" class="btn m-1">
-                                edit
-                            </button>
-                        </form>
+                        <button type="button"
+                            class="main-modal-link btn m-1"
+                            data-main-modal-label="Edit post({{ post.name }})"
+                            data-main-modal-get-link={% url "blog:post_update" pk=post.id %}>
+                            Edit
+                        </button>
                     {% endif %}
                     <form data-action-type="LIKE" data-like-counter-id="LID{{ post.id }}" method="post" action="{% url "like:like" %}">
                         {% csrf_token %}
@@ -27,7 +27,7 @@
                         <input type="hidden" value="{{ post.id }}" name="object_id">
                         <input type="hidden" value="Post" name="content_type">
                         <button type="submit" class="btn m-1">
-                            likes <span class="badge" id="LID{{ post.id }}">{{ post.likes.all|length }}</span>
+                            Likes <span class="badge" id="LID{{ post.id }}">{{ post.likes.all|length }}</span>
                         </button>
                     </form>
                 </div>

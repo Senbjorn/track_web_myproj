@@ -1,14 +1,45 @@
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django import forms
 from django.shortcuts import render, reverse, redirect
-from django.urls import reverse as reverse_url
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.shortcuts import get_object_or_404
 from blog.models import *
-from comments.views import CommentListForm
+from comments.views import CommentListForm, comment_form_filter
 from comments.models import Comment
+from django.http import HttpResponse
+from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse as reverse_url
 from django.contrib.contenttypes.fields import GenericRelation as GR
+
+
+def blog_form_filter(my_form, query):
+    if my_form.is_valid():
+        if my_form.cleaned_data['order_by']:
+            if my_form.cleaned_data['direction']:
+                if my_form.cleaned_data['direction'] == 'asc':
+                    query = query.order_by(my_form.cleaned_data['order_by'])
+                elif my_form.cleaned_data['direction'] == 'desc':
+                    query = query.order_by('-{}'.format(my_form.cleaned_data['order_by']))
+            else:
+                query = query.order_by(my_form.cleaned_data['order_by'])
+        if my_form.cleaned_data['search']:
+            query = query.filter(name=my_form.cleaned_data['search'])
+    return query
+
+
+def post_form_filter(my_form, query):
+    if my_form.is_valid():
+        if my_form.cleaned_data['order_by']:
+            if my_form.cleaned_data['direction']:
+                if my_form.cleaned_data['direction'] == 'asc':
+                    query = query.order_by(my_form.cleaned_data['order_by'])
+                elif my_form.cleaned_data['direction'] == 'desc':
+                    query = query.order_by('-{}'.format(my_form.cleaned_data['order_by']))
+            else:
+                query = query.order_by(my_form.cleaned_data['order_by'])
+        if my_form.cleaned_data['search']:
+            query = query.filter(name=my_form.cleaned_data['search'])
+    return query
 
 
 class CategoryListForm(forms.Form):
@@ -32,74 +63,59 @@ class CategoryListForm(forms.Form):
 
 
 class BlogListForm(forms.Form):
+    search = forms.CharField(required=False, label="Name")
     order_by = forms.ChoiceField(
         choices=(
             ('name', 'name'),
-            ('id', 'id'),
-            ('created_at', 'date')
+            ('created_at', 'date of creation'),
+            ('updated_at', 'last update'),
         ),
+        initial='name',
         required=False,
-        label='sort by'
+        label='Sort by',
     )
     direction = forms.ChoiceField(
         choices=(
-            ('inc', 'increase'),
-            ('dec', 'decrease')
+            ('asc', 'asc'),
+            ('desc', 'desc')
         ),
+        initial='asc',
         required=False,
-        label='order'
+        label='Order'
     )
-    search = forms.CharField(required=False)
-
-
-class PostListFrom(forms.Form):
-    order_py = forms.ChoiceField(
-        choices=(
-            ('name', 'name'),
-            ('id', 'id'),
-            ('created_at', 'date')
-        ),
-        required=False,
-        label='sort by'
-    )
-    direction = forms.ChoiceField(
-        choices=(
-            ('inc', 'increase'),
-            ('dec', 'decrease')
-        ),
-        required=False,
-        label='order'
-    )
-    search = forms.CharField(required=False)
 
 
 class PostListForm(forms.Form):
+    search = forms.CharField(required=False, label="Name")
     order_by = forms.ChoiceField(
         choices=(
             ('name', 'name'),
-            ('id', 'id'),
-            ('created_at', 'date of creation')
+            ('created_at', 'date of creation'),
+            ('updated_at', 'last update'),
         ),
+        initial='name',
         required=False,
-        label='sort by'
+        label='Sort by',
+        # widget=forms.RadioSelect,
     )
     direction = forms.ChoiceField(
-        choices=(
-            ('inc', 'increase'),
-            ('dec', 'decrease')
-        ),
+        choices=[
+            ('asc', 'asc'),
+            ('desc', 'desc'),
+        ],
+        initial='asc',
         required=False,
-        label='order'
+        label='Order',
+        # widget=forms.RadioSelect,
     )
-    search = forms.CharField(required=False);
 
 
 class BlogList(ListView):
     template_name = "blog/list_blogs.html"
     context_object_name = "blogList"
     model = Blog
-    paginate_by = 2
-    paginate_orphans = 1
+    paginate_by = 10
+    paginate_orphans = 2
     my_form = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -115,26 +131,15 @@ class BlogList(ListView):
 
     def get_queryset(self):
         query = super(BlogList, self).get_queryset()
-        if self.my_form.is_valid():
-            if self.my_form.cleaned_data['order_by']:
-                if self.my_form.cleaned_data['direction']:
-                    if self.my_form.cleaned_data['direction'] == 'inc':
-                        query = query.order_by(self.my_form.cleaned_data['order_by'])
-                    elif self.my_form.cleaned_data['direction'] == 'dec':
-                        query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
-                else:
-                    query = query.order_by(self.my_form.cleaned_data['order_by'])
-            if self.my_form.cleaned_data['search']:
-                query = query.filter(name=self.my_form.cleaned_data['search'])
-        return query
+        return blog_form_filter(self.my_form, query)
 
 
 class BlogDetail(ListView):
     template_name = "blog/detail_blog.html"
     context_object_name = "posts"
     model = Post
-    paginate_by = 2
-    paginate_orphans = 1
+    paginate_by = 10
+    paginate_orphans = 2
     my_blog = None
     my_form = None
 
@@ -154,18 +159,7 @@ class BlogDetail(ListView):
     def get_queryset(self):
         query = super(BlogDetail, self).get_queryset()
         query = query.filter(blog=self.my_blog)
-        if self.my_form.is_valid():
-            if self.my_form.cleaned_data['order_by']:
-                if self.my_form.cleaned_data['direction']:
-                    if self.my_form.cleaned_data['direction'] == 'inc':
-                        query = query.order_by(self.my_form.cleaned_data['order_by'])
-                    elif self.my_form.cleaned_data['direction'] == 'dec':
-                        query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
-                else:
-                    query = query.order_by(self.my_form.cleaned_data['order_by'])
-            if self.my_form.cleaned_data['search']:
-                query = query.filter(name=self.my_form.cleaned_data['search'])
-        return query
+        return post_form_filter(self.my_form, query)
 
 
 class PostList(ListView):
@@ -183,8 +177,8 @@ class PostDetail(ListView):
     template_name = "blog/detail_post.html"
     context_object_name = "comments"
     model = Comment
-    paginate_by = 2
-    paginate_orphans = 1
+    paginate_by = 10
+    paginate_orphans = 2
     my_form = None
     my_post = None
 
@@ -204,35 +198,26 @@ class PostDetail(ListView):
     def get_queryset(self):
         query = super(PostDetail, self).get_queryset()
         query = query.filter(post=self.my_post)
-        if self.my_form.is_valid():
-            if self.my_form.cleaned_data['order_by']:
-                if self.my_form.cleaned_data['direction']:
-                    if self.my_form.cleaned_data['direction'] == 'inc':
-                        query = query.order_by(self.my_form.cleaned_data['order_by'])
-                    elif self.my_form.cleaned_data['direction'] == 'dec':
-                        query = query.order_by('-{}'.format(self.my_form.cleaned_data['order_by']))
-                else:
-                    query = query.order_by(self.my_form.cleaned_data['order_by'])
-            if self.my_form.cleaned_data['search']:
-                query = query.filter(author__username=self.my_form.cleaned_data['search'])
-        return query
+        return comment_form_filter(self.my_form, query)
 
 
 class CreateBlog(CreateView):
-    template_name = "blog_create.html"
+    template_name = "blog/action_create_blog.html"
     model = Blog
     fields = 'categories', 'name', 'description'
+    success_url = ""
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(CreateBlog, self).form_valid(form)
+        super(CreateBlog, self).form_valid(form)
+        return HttpResponse("OK");
 
     def get_success_url(self):
-        return reverse('blog:blog_detail', kwargs={'pk': self.object.pk})
+        return self.success_url
 
 
 class UpdateBlog(UserPassesTestMixin, UpdateView):
-    template_name = "blog_update.html"
+    template_name = "blog/action_update_blog.html"
     model = Blog
     fields = 'description',
     context_object_name = 'blog'
@@ -245,7 +230,6 @@ class UpdateBlog(UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         super(UpdateBlog, self).form_valid(form)
-        from django.http import HttpResponse
         return HttpResponse("OK")
 
     def get_success_url(self):
@@ -253,7 +237,7 @@ class UpdateBlog(UserPassesTestMixin, UpdateView):
 
 
 class UpdatePost(UserPassesTestMixin, UpdateView):
-    template_name = "post_update.html"
+    template_name = "blog/action_update_post.html"
     model = Post
     fields = 'text',
     context_object_name = "post"
@@ -274,15 +258,20 @@ class UpdatePost(UserPassesTestMixin, UpdateView):
 
 
 class CreatePost(UserPassesTestMixin, CreateView):
-    template_name = "post_create.html"
+    template_name = "blog/action_create_post.html"
     model = Post
     fields = 'text', 'name'
-    my_blog = None
-
     raise_exception = True
+    my_blog = None
+    success_url = ""
 
     def test_func(self):
         return self.my_blog.owner == self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super(CreatePost, self).get_context_data(**kwargs)
+        context['blog'] = self.my_blog
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.my_blog = get_object_or_404(Blog.objects.all(), id=self.kwargs['pk'])
@@ -293,11 +282,11 @@ class CreatePost(UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.blog = self.my_blog
-        return super(CreatePost, self).form_valid(form)
+        super(CreatePost, self).form_valid(form)
+        return HttpResponse("OK")
 
     def get_success_url(self):
-        return reverse('blog:post_detail', kwargs={'pk': self.object.pk})
-
+        return self.success_url
 
 class CategoryList(ListView):
     template_name = "category_list.html"

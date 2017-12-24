@@ -16,27 +16,6 @@ class LikeButtonForm(forms.Form):
     object_id = forms.IntegerField(required=True)
     content_type = forms.CharField(required=True)
 
-
-class LikeDetail(DetailView):
-    model = LikeDislike
-    template_name = "like_Detail.py.html"
-    context_object_name = "like"
-
-    def get_context_data(self, **kwargs):
-        context = super(LikeDislike, self).get_context_data(**kwargs)
-        context['title'] = "Like #{}".format(self.object.id)
-
-
-class LikeList(ListView):
-    model = LikeDislike
-    template_name = "like_list.html"
-    context_object_name = ""
-
-    def get_context_data(self, **kwargs):
-        context = super(LikeDislike, self).get_context_data(**kwargs)
-        context['title'] = "Like list"
-
-
 @login_required
 def like_something(request):
     # try:
@@ -54,7 +33,9 @@ def like_something(request):
             if not obj.likes.filter(user=user):
                 obj.likes.create(user=user)
                 # LikeDislike.objects.create(user=user, content_object=obj)
-                return HttpResponse("OK")
-    # except:
+            else:
+                obj.likes.filter(user=user).delete()
+            return HttpResponse("OK")
+# except:
     #     pass
     return HttpResponse("ERROR")

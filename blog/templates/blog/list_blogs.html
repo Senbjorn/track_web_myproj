@@ -1,14 +1,26 @@
 {% extends "core/g_base.html" %}
 {% block  content %}
-    <div style="text-align: center">
-        {% include "create_blog_ref.html" %}
+    <button class="btn" data-toggle="collapse" data-target="#blog-list-search-form">Search settings</button>
+    <div class="panel panel-default collapse" id="blog-list-search-form">
+        <div class="panel-heading">
+            Search form
+        </div>
+        <div class="panel-body">
+            {% include "core/template_form_u_search.html" with form=form %}
+        </div>
     </div>
-        {% include "search_form.html" with form=form %}
-        Blogs:
     <div class="panel-group">
     {% for blog in blogList %}
         {% include "blog/list_element_blog.html" with blog=blog %}
     {% endfor %}
     </div>
     {% include "core/paginate_bar.html" with pages=page_obj %}
+{% endblock %}
+{% block sidebar %}
+    <li
+            class="list-group-item main-modal-link"
+            data-main-modal-label="Create blog"
+            data-main-modal-get-link={% url "blog:blog_create" %}>
+        Create your blog
+    </li>
 {% endblock %}

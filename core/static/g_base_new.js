@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-
-
-    //navbar
-
     //sidebar
     $(".submenu .list-group-item").each(function () {
         $(this).hover(function () {
@@ -14,24 +10,28 @@ $(document).ready(function () {
         })
     });
 
+    $(document).on('click', '[data-item-type="a"]', function (event) {
+        document.location.href=($(this).data('href'));
+    });
+
+
     //modal
-    $(document).on('click', '.editLink', function (event) {
-        $('#editModalLabel').html($(this).data('data-formLabel'));
-        $('#editModal').modal('show');
-        $.get(this.href, function (data) {
-            $('#edit-body').html(data);
+    $(document).on('click', '.main-modal-link', function (event) {
+        $('#mainModalLabel').html($(this).data('main-modal-label'));
+        $('#mainModal').modal('show');
+        $.get($(this).data('main-modal-get-link'), function (data) {
+            $('#mainModalBody').html(data);
         });
         event.preventDefault();
     });
 
-    $(document).on('submit', '[data-formType="editModal"]', function (event) {
+    $(document).on('submit', '[data-form-type="mainModalForm"]', function (event) {
         $.post(this.action, $(this).serialize(), function (data) {
             if (data == "OK") document.location.reload();
-            else $('#edit-body').html(data);
+            else $('#mainModalBody').html(data);
         })
         event.preventDefault();
     });
-
     //likes
     $(document).on('submit', '[data-action-type="LIKE"]', function (event) {
         $.post(this.action, $(this).serialize(), function (data) {

@@ -2,7 +2,6 @@
     {% csrf_token %}
     {% for field in form %}
         {{ field.label_tag }}<br>
-        {{ field }}
         {% if field.help_text %}
             <span style="color: gray; font-size: small">{{ field.help_text|safe }}</span>
         {% endif %}

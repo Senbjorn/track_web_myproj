@@ -34,12 +34,3 @@ body footer {
     font-weight: bold;
     font-size: 18pt;
 }
-
-.submenu .list-group-item:hover a{
-    color: white;
-}
-
-.submenu .list-group-item a{
-    text-decoration: none;
-    color: black;
-}

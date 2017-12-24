@@ -6,7 +6,7 @@
         <div class="row">
             <div class="column col-md-7">
                 author: {% include "core/ref_user.html" with user=comment.author %}
-                updated at: {{ comment.updated_at }}
+                created at: {{ comment.created_at }}
             </div>
             <div class="column col-md-5 ">
                 <div class="d-md-flex justify-content-end">
@@ -14,7 +14,7 @@
                         {% csrf_token %}
                         <input type="hidden" value="{{ user.id }}" name="user_id">
                         <input type="hidden" value="{{ comment.id }}" name="object_id">
-                        <input type="hidden" value="Post" name="content_type">
+                        <input type="hidden" value="Comment" name="content_type">
                         <button type="submit" class="btn m-1">
                             likes <span class="badge" id="LCID{{ comment.id }}">{{ comment.likes.all|length }}</span>
                         </button>

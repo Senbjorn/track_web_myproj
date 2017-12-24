@@ -27,12 +27,16 @@
             {{ idblog.description }}
         </div>
     </div>
-    <div>
-        <div style="text-align: center">
-            {% include "create_post_ref.html" with blogid=idblog.id %}
+    <button class="btn" data-toggle="collapse" data-target="#blog-search-form">Search settings</button>
+    <div class="panel panel-default collapse" id="blog-search-form">
+        <div class="panel-heading">
+            Search form
         </div>
-        {% include "search_form.html" with form=form %}
-        Posts:
+        <div class="panel-body">
+            {% include "core/template_form_u_search.html" with form=form %}
+        </div>
+    </div>
+    <div>
         <div class="panel-group">
         {% for post in posts %}
             {% include "blog/list_element_post.html" with post=post %}
@@ -41,7 +45,21 @@
     </div>
     {% include "core/paginate_bar.html" with pages=page_obj %}
 {% endblock %}
+
 {% block sidebar %}
-    <li class="list-group-item" data-sidebar-create-blog="{{ idblog.id }}">New blog</li>
-    <li class="list-group-item" data-sidebar-edit-blog="{{ idblog.id }}">Edit</li>
+    {% if user == idblog.owner %}
+         <li
+                class="list-group-item main-modal-link"
+                data-main-modal-label="Edit blog ({{ idblog.name }})"
+                data-main-modal-get-link={% url "blog:blog_update" pk=idblog.id %}>
+            Edit blog
+        </li>
+        <li
+                class="list-group-item main-modal-link"
+                data-main-modal-label="Create post (in blog {{ idblog.name }})"
+                data-main-modal-get-link={% url "blog:post_create" pk=idblog.id %}>
+            New post
+        </li>
+    {% endif %}
+    <li class="list-group-item" data-item-type="a" data-href={% url "blog:blog_list" %}>To blogs</li>
 {% endblock %}

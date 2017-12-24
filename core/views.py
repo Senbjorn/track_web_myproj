@@ -2,11 +2,13 @@ from django.shortcuts import reverse, get_object_or_404, render
 from django.contrib.auth import login
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from blog.models import *
 from comments.models import *
 from core.models import *
+from django.http import HttpResponse
 from django.core.paginator import Paginator, InvalidPage
 # Create your views here.
 
@@ -134,28 +136,39 @@ class ProfileCreationForm(UserCreationForm, ProfileDataForm):
 
 
 class ProfileCreate(CreateView):
-    template_name = "signup.html"
+    template_name = "core/action_register_user.html"
     form_class = ProfileCreationForm
+    success_url = ""
+
+    def form_valid(self, form):
+        super(ProfileCreate, self).form_valid(form)
+        # login(self.request, self.object)
+        return HttpResponse("OK")
 
     def get_success_url(self):
         login(self.request, self.object)
-        return reverse("core:startpage")
+        return self.success_url
 
 
 class ProfileUpdate(UpdateView):
-    template_name = "profile_update.html"
+    template_name = "core/action_update_user.html"
     form_class = ProfileDataForm
+    success_url = ""
+
+    def form_valid(self, form):
+        super(ProfileUpdate, self).form_valid(form)
+        return HttpResponse("OK")
 
     def get_object(self, queryset=None):
         return self.request.user
 
     def get_success_url(self):
-        return reverse("core:profile_main_page", kwargs={'pk': self.request.user.id})
-
+        return self.success_url
 
 class ProfileUpdatePass(UpdateView):
-    template_name = "profile_update.html"
+    template_name = "core/action_update_password_user.html"
     form_class = PasswordChangeForm
+    success_url = ""
 
     def get_form(self, form_class=None):
         return self.form_class(self.request.user, self.request.POST)
@@ -167,9 +180,21 @@ class ProfileUpdatePass(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def form_valid(self, form):
+        super(ProfileUpdatePass, self).form_valid(form)
+        return HttpResponse("OK")
+
     def get_success_url(self):
         login(self.request, get_object_or_404(User.objects.all(), id=self.request.user.id))
-        return reverse("core:profile_main_page", kwargs={'pk': self.request.user.id})
+        return self.success_url
+
+
+class ProfileLogin(LoginView):
+    template_name = "core/action_login_user.html"
+
+    def form_valid(self, form):
+        super(ProfileLogin, self).form_valid(form)
+        return HttpResponse("OK")
 
 def g_base_view(request):
     return render(request, "core/g_base.html");

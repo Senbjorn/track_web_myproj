@@ -1,8 +1,8 @@
-<form data-form-type="mainModalForm" action="{% url "blog:blog_create" %}" method="post">
+{% load adding_class %}
+<form class="form-search-sidebar detail" method="get" action="{{ action }}">
     {% csrf_token %}
     {% for field in form %}
-        {{ field.label_tag }}<br>
-        {{ field }}
+        {{ field.label_tag }}{{ field }}<br>
         {% if field.help_text %}
             <span style="color: gray; font-size: small">{{ field.help_text|safe }}</span>
         {% endif %}
@@ -14,5 +14,5 @@
             <br>
         {% endif %}
     {% endfor %}<br>
-    <input type="submit" class="btn btn-primary" value="Create">
+    <input value="apply" type="submit" class="btn btn-primary">
 </form>
